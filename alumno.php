@@ -31,6 +31,24 @@ function conversionYdescarga($datos, $filename = "resultados.csv", $delimiter=",
       fpassthru($f);
   }
 //
+function &que(&$x) {
+    $x++;
+    return $x;
+}
+
+function Mostrar($Datos)
+{
+  echo "<table>";
+  for ($i=0; $i < count($Datos); $i++) {
+    echo "<tr>";
+    foreach ($Datos[$i] as $valor) {
+      echo "<td>".$valor."</td>";
+    }
+    echo "</tr>";
+  }
+  echo "</table>";
+}
+//
 function AumentarAlumno($AuxAlumnos,$Nuevos)
 {
   $dado = [1,1, 0, 1, 1, 1,1,1, 1,1];
@@ -60,6 +78,7 @@ function AsignarNuevosAlumnos($AuxAlumnos,$Nuevos,$Limite,$cont)
   }
   return array($AuxAlumnos,$Nuevos);
 }
+//
 function DisminuirAlumnos($AuxAlumnos,$Nuevos,$Limite,$cont)
 {
   $a=$cont;
@@ -96,7 +115,7 @@ function RecuperarcsvToArray($archivo)
   return $datos;//matriz con todos los elementos del archivo
 }
 
-function listarAlumnos($archivo,$archivo1){
+/*function listarAlumnos($archivo,$archivo1){
   $fila=0;//contador para recuperar datos
   $archcsv=fopen($archivo,"r");
   while (($registro= fgetcsv($archcsv,1024,","))== true) {//mientras haya comas
@@ -116,7 +135,7 @@ function listarAlumnos($archivo,$archivo1){
   }
   fclose($archcsv);
   return $datos;//matriz con todos los elementos del archivo
-}
+}*/
 
 //no tutorados y tutorados
 function NoT_yNuevos($archivo,$archivo1){

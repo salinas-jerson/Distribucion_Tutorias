@@ -53,9 +53,6 @@ if (in_array($ex1,$permitico)) {
           $Nuevos=NoT_yNuevos($Matriculados,$AlumnosAnterior);//nuevos alumnos por asignar tutor
           //array_splice($Nuevos, 0, 1);//archivo limpio
           $NoTutoria=NoT_yNuevos($AlumnosAnterior,$Matriculados);//Alumnos que no haran tutoria
-          //$NrAlAnt=count($AlumnosAnterior);//#alumnos anterior semestre
-          //$Manti=$NrAlAnt-count($NoTutoria);
-          //printf("#A_anter ".$NrAlAnt.", Se mantienes ".$Manti." NoTuto ".count($NoTutoria)." Tuto ".count($Nuevos)."<br>");
           $PorAsig=(count($Matriculados))-$Limite*(count($Docentes)-1);
 
           //$Sobran=count($Nuevos)-((count($Matriculados))-$Limite*(count($Docentes)-1));
@@ -76,10 +73,12 @@ if (in_array($ex1,$permitico)) {
               //
               $RecuperaAux=array();
               if ($cont<$Limite) {//$Limite
+                //AsignarNuevosAlumnos($AuxAlumnos,$Nuevos,$Limite,$cont);
                 $RecuperaAux=AsignarNuevosAlumnos($AuxAlumnos,$Nuevos,$Limite,$cont);
                 $AuxAlumnos=$RecuperaAux[0];
                 $Nuevos=$RecuperaAux[1];
 
+                //AumentarAlumno($AuxAlumnos,$Nuevos);
                 $RecuperaAux=AumentarAlumno($AuxAlumnos,$Nuevos);
                 $AuxAlumnos=$RecuperaAux[0];
                 $Nuevos=$RecuperaAux[1];
@@ -90,6 +89,7 @@ if (in_array($ex1,$permitico)) {
                 //printf("(: Aux ".count($AuxAlumnos)." Nuev ".count($Nuevos)." fila ".$fila_."<br>");
               }
               elseif($cont==$Limite)  {
+                //AumentarAlumno($AuxAlumnos,$Nuevos);
                 $RecuperaAux=AumentarAlumno($AuxAlumnos,$Nuevos);
                 $AuxAlumnos=$RecuperaAux[0];
                 $Nuevos=$RecuperaAux[1];
@@ -99,9 +99,11 @@ if (in_array($ex1,$permitico)) {
                 //printf("(: Aux ".count($AuxAlumnos)." Nuev ".count($Nuevos)." fila ".$fila_."<br>");
               }
               else {//else
+                //DisminuirAlumnos($AuxAlumnos,$Nuevos,$Limite,$cont);
                 $RecuperaAux=DisminuirAlumnos($AuxAlumnos,$Nuevos,$Limite,$cont);
                 $AuxAlumnos=$RecuperaAux[0];
                 $Nuevos=$RecuperaAux[1];
+                //AumentarAlumno($AuxAlumnos,$Nuevos);
 
                 $RecuperaAux=AumentarAlumno($AuxAlumnos,$Nuevos);
                 $AuxAlumnos=$RecuperaAux[0];
@@ -113,60 +115,36 @@ if (in_array($ex1,$permitico)) {
               }
             }
           }
-          //printf("N° Alumnos Distribuidos- ".(count($Distribucion_Docente)-36)." falta asignar ".count($Nuevos)." alumnos<br><br>");
-
           printf($PorAsig." Docentes tendran mas 1 alumno <br>");
-          printf("N° Matriculados ".(count($Matriculados)).", N° Docentes ".(count($Docentes)-1).",  Asignacion a ".$Limite." alumnos"."<br><br>");
-
+          printf("N° Matriculados ".(count($Matriculados)).", N° DocenteS ".(count($Docentes)-1).",  Asignacion a ".$Limite." alumnos"."<br><br>");
+          //
+          //***retorno por referencia profundizar
+        //  $n=9;
+          //$N=&que($n);
+          //printf($n."jaaj <br>");
           echo "<tr>"."<td>"."Código"."</td>"."<td>"."Nombres"."</td>"."</tr><br>";
-          echo "<table>";
           //echo .... cabeceras de la tabla
-          for ($i=0; $i < count($Distribucion_Docente); $i++) {
-            echo "<tr>";
-            foreach ($Distribucion_Docente[$i] as $valor) {
-              echo "<td>".$valor."</td>";
-            }
-            echo "</tr>";
-          }
-          echo "</table>";
+          Mostrar($Distribucion_Docente);
         }
         elseif ($Option=="noTutorados") {
           $Datos=array();
           $Datos=NoT_yNuevos($AlumnosAnterior,$Matriculados);// en datos está todo un distribuidos
-          //$Datos=$Matriculados;
-          echo "Alumnos no tutorados :-) <br>";
-          echo "<tr>"."<td>"."Código"."</td>"."<td>"."Nombres"."</td>"."</tr><br>";
-          echo "<table>";
+          //
+          echo "Alumnos no tutorados :-) <br><br>";
           //echo .... cabeceras de la tabla
-          for ($i=0; $i < count($Datos); $i++) {
-            echo "<tr>";
-            foreach ($Datos[$i] as $valor) {
-              echo "<td>".$valor."</td>";
-            }
-            echo "</tr>";
-          }
-          echo "</table>";
+          echo "<tr>"."<td>"."Código"."</td>"."<td>"."Nombres"."</td>"."</tr><br>";
+          //mostar alumnos no turorados
+          Mostrar($Datos);
         }
         else {
           $Datos=array();
           $Datos=NoT_yNuevos($Matriculados,$AlumnosAnterior);// en datos está todo un distribuidos
           //
-
-          echo "<table>";
+          echo "Alumnos tutorados :)<br> <br>";
           //echo .... cabeceras de la tabla
-          echo "Alumnos tutorados :-)";
-          //printf("#t ".count($Datos)." #AA".count($AlumnosAnterior)." #M ".count($Matriculados)."<br>");
           echo "<tr>"."<td>"."Código"."</td>"."<td>"."Nombres"."</td>"."</tr><br>";
-          for ($i=0; $i < count($Datos); $i++) {
-            echo "<tr>";
-            foreach ($Datos[$i] as $valor) {
-              echo "<td>".$valor."</td>";
-            }
-            //$tabla
-            echo "</tr>";
-          }
-          //$tabla=$Datos;
-          echo "</table>";
+          //alumnos tutorados
+          Mostrar($Datos);
         }
       }
 
