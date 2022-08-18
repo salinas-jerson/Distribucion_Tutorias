@@ -35,94 +35,27 @@ if (in_array($ex1,$permitico)) {
 
       //recuperando archivos csv a arraglos BiDimencional
       $Matriculados=array();$Docentes=array();$Distribuidos=array();
-      $Matriculados=RecuperarcsvToArray($dir.$matriculados);//recupera los matriculados
+      $Matriculados=RecuperarcsvToArray($dir.$matriculados);//recupera los matriculados en el presente semestre
       array_splice($Matriculados, 0, 1);//elimina cabecera
-      $Distribuidos=RecuperarcsvToArray($dir.$distribuidos);//recupera los distribuidos
-      $Docentes=RecuperarcsvToArray($dir.$docentes);//recupera los docentes
+      $Distribuidos=RecuperarcsvToArray($dir.$distribuidos);//recupera alumnos distribuidos del semestre anterior
+      $Docentes=RecuperarcsvToArray($dir.$docentes);//recupera los docentes del presente semestre
 
       if ($BotonB) {
-        $AlumnosAnterior=array();$DatosD=array();$DatosT=array();
-        $DatosT=MatriculadosAnterrior($dir.$distribuidos);
-        $AlumnosAnterior=$DatosT[0];//solo alumnos del Docente del anterior semestre
-        $DatosD=$DatosT[1];//solo docentes del anterior semestre
+        $AlumnosAnterior=array();$DatoDocentes=array();$GetAlumnos_Docentes=array();
+        $GetAlumnos_Docentes=MatriculadosAnterior($Distribuidos);
+        $AlumnosAnterior=$GetAlumnos_Docentes[0];//solo alumnos del anterior semestre
+        $DatoDocentes=$GetAlumnos_Docentes[1];//solo docentes del anterior semestre
 
         if ($Option=="distribucion") {
-          $Limite=(int)((count($Matriculados))/(count($Docentes)-1));//-1 por las filas cabecera
-          $Distribucion_Docente=array();//contruir nueva distribucion
-          $Nuevos=array();$NoTutoria=array();
-          $Nuevos=NoT_yNuevos($Matriculados,$AlumnosAnterior);//nuevos alumnos por asignar tutor
-          //array_splice($Nuevos, 0, 1);//archivo limpio
-          $NoTutoria=NoT_yNuevos($AlumnosAnterior,$Matriculados);//Alumnos que no haran tutoria
-          $PorAsig=(count($Matriculados))-$Limite*(count($Docentes)-1);
-
-          //$Sobran=count($Nuevos)-((count($Matriculados))-$Limite*(count($Docentes)-1));
-
+          $Limite=0;
+          $PorAsig=0;
+          $Distribucion_Docente=array();
+          $Distribucion_Docente=Distribucion_X_Docente($Distribuidos,$Matriculados,$Docentes,$AlumnosAnterior,$DatoDocentes,$PorAsig,$Limite);
           //
-          $fila_=0;
-          for ($i=0; $i <count($Distribuidos) ; $i++) {
-
-            if (strtolower($Distribuidos[$i][0])=="docente") {
-              $Distribucion_Docente[$fila_]=$Distribuidos[$i];$i+=1;
-              $cont=0;//verifica limite de alumnos
-              $AuxAlumnos=array();$filAux=0;
-              while (strtolower($Distribuidos[$i][0])!="docente") {
-                if (Existe($Distribuidos[$i][0],$NoTutoria)){$i+=1;}//si no hace tutoria se excluye
-                else {$AuxAlumnos[$filAux]=$Distribuidos[$i];$i+=1;$cont+=1;$filAux+=1;}
-                if ($i ==count($Distribuidos)) {break;}
-              }$i-=1;
-              //
-              $RecuperaAux=array();
-              if ($cont<$Limite) {//$Limite
-                //AsignarNuevosAlumnos($AuxAlumnos,$Nuevos,$Limite,$cont);
-                $RecuperaAux=AsignarNuevosAlumnos($AuxAlumnos,$Nuevos,$Limite,$cont);
-                $AuxAlumnos=$RecuperaAux[0];
-                $Nuevos=$RecuperaAux[1];
-
-                //AumentarAlumno($AuxAlumnos,$Nuevos);
-                $RecuperaAux=AumentarAlumno($AuxAlumnos,$Nuevos);
-                $AuxAlumnos=$RecuperaAux[0];
-                $Nuevos=$RecuperaAux[1];
-
-                //printf("(:: Aux< ".count($AuxAlumnos)." Asig ".count($Distribucion_Docente)." fila ".$fila_."<br>");
-                $Distribucion_Docente = array_merge($Distribucion_Docente, $AuxAlumnos);
-                $fila_=count($Distribucion_Docente);
-                //printf("(: Aux ".count($AuxAlumnos)." Nuev ".count($Nuevos)." fila ".$fila_."<br>");
-              }
-              elseif($cont==$Limite)  {
-                //AumentarAlumno($AuxAlumnos,$Nuevos);
-                $RecuperaAux=AumentarAlumno($AuxAlumnos,$Nuevos);
-                $AuxAlumnos=$RecuperaAux[0];
-                $Nuevos=$RecuperaAux[1];
-                //printf("(:: Aux== ".count($AuxAlumnos)." Asig ".count($Distribucion_Docente)." fila ".$fila_."<br>");
-                $Distribucion_Docente = array_merge($Distribucion_Docente, $AuxAlumnos);
-                $fila_=count($Distribucion_Docente);
-                //printf("(: Aux ".count($AuxAlumnos)." Nuev ".count($Nuevos)." fila ".$fila_."<br>");
-              }
-              else {//else
-                //DisminuirAlumnos($AuxAlumnos,$Nuevos,$Limite,$cont);
-                $RecuperaAux=DisminuirAlumnos($AuxAlumnos,$Nuevos,$Limite,$cont);
-                $AuxAlumnos=$RecuperaAux[0];
-                $Nuevos=$RecuperaAux[1];
-                //AumentarAlumno($AuxAlumnos,$Nuevos);
-
-                $RecuperaAux=AumentarAlumno($AuxAlumnos,$Nuevos);
-                $AuxAlumnos=$RecuperaAux[0];
-                $Nuevos=$RecuperaAux[1];
-                //printf("(:: Aux > ".count($AuxAlumnos)." Asig ".count($Distribucion_Docente)." fila ".$fila_."<br>");
-                $Distribucion_Docente = array_merge($Distribucion_Docente, $AuxAlumnos);
-                $fila_=count($Distribucion_Docente);
-                //printf("(: Aux ".count($AuxAlumnos)." Nuev ".count($Nuevos)." fila ".$fila_."<br>");
-              }
-            }
-          }
           printf($PorAsig." Docentes tendran mas 1 alumno <br>");
           printf("N° Matriculados ".(count($Matriculados)).", N° DocenteS ".(count($Docentes)-1).",  Asignacion a ".$Limite." alumnos"."<br><br>");
           //
-          //***retorno por referencia profundizar
-        //  $n=9;
-          //$N=&que($n);
-          //printf($n."jaaj <br>");
-          echo "<tr>"."<td>"."Código"."</td>"."<td>"."Nombres"."</td>"."</tr><br>";
+          echo "<table>"."<tr>"."<td>"."Código"."</td>"."<td>"."Nombres"."</td>"."</tr><br>"."</table>";
           //echo .... cabeceras de la tabla
           Mostrar($Distribucion_Docente);
         }
@@ -132,9 +65,9 @@ if (in_array($ex1,$permitico)) {
           //
           echo "Alumnos no tutorados :-) <br><br>";
           //echo .... cabeceras de la tabla
-          echo "<tr>"."<td>"."Código"."</td>"."<td>"."Nombres"."</td>"."</tr><br>";
-          //mostar alumnos no turorados
-          Mostrar($Datos);
+          echo "<table>"."<tr>"."<td>"."Código"."</td>"."<td>"."Nombres"."</td>"."</tr><br>"."</table>";
+
+          Mostrar($Datos);//mostar alumnos no turorados
         }
         else {
           $Datos=array();
@@ -142,85 +75,16 @@ if (in_array($ex1,$permitico)) {
           //
           echo "Alumnos tutorados :)<br> <br>";
           //echo .... cabeceras de la tabla
-          echo "<tr>"."<td>"."Código"."</td>"."<td>"."Nombres"."</td>"."</tr><br>";
-          //alumnos tutorados
-          Mostrar($Datos);
+          echo "<table>"."<tr>"."<td>"."Código"."</td>"."<td>"."Nombres"."</td>"."</tr><br>"."</table>";
+
+          Mostrar($Datos);//alumnos tutorados
         }
       }
-
+      //otro boton
       elseif (0==1) {
-        $AlumnosAnterior=array();$DatosD=array();$DatosT=array();
-        $DatosT=MatriculadosAnterrior($dir.$distribuidos);
-        $AlumnosAnterior=$DatosT[0];//solo alumnos del Docente del anterior semestre
-        $DatosD=$DatosT[1];//solo docentes del anterior semestre
-        if (1==1) {
-          $Limite=(int)((count($Matriculados))/(count($Docentes)-1));//-1 por las filas cabecera
-          $Distribucion_Docente=array();//contruir nueva distribucion
-          $Nuevos=array();$NoTutoria=array();
-          $Nuevos=NoT_yNuevos($Matriculados,$AlumnosAnterior);//nuevos alumnos por asignar tutor
-          //array_splice($Nuevos, 0, 1);//archivo limpio
-          $NoTutoria=NoT_yNuevos($AlumnosAnterior,$Matriculados);//Alumnos que no haran tutoria
-          $PorAsig=(count($Matriculados))-$Limite*(count($Docentes)-1);
 
-          $fila_=0;
-          for ($i=0; $i <count($Distribuidos) ; $i++) {
-
-            if (strtolower($Distribuidos[$i][0])=="docente") {
-              $Distribucion_Docente[$fila_]=$Distribuidos[$i];$i+=1;
-              $cont=0;//verifica limite de alumnos
-              $AuxAlumnos=array();$filAux=0;
-              while (strtolower($Distribuidos[$i][0])!="docente") {
-                if (Existe($Distribuidos[$i][0],$NoTutoria)){$i+=1;}//si no hace tutoria se excluye
-                else {$AuxAlumnos[$filAux]=$Distribuidos[$i];$i+=1;$cont+=1;$filAux+=1;}
-                if ($i ==count($Distribuidos)) {break;}
-              }$i-=1;
-              //
-              $RecuperaAux=array();
-              if ($cont<$Limite) {//$Limite
-                $RecuperaAux=AsignarNuevosAlumnos($AuxAlumnos,$Nuevos,$Limite,$cont);
-                $AuxAlumnos=$RecuperaAux[0];
-                $Nuevos=$RecuperaAux[1];
-
-                $RecuperaAux=AumentarAlumno($AuxAlumnos,$Nuevos);
-                $AuxAlumnos=$RecuperaAux[0];
-                $Nuevos=$RecuperaAux[1];
-
-                //printf("(:: Aux< ".count($AuxAlumnos)." Asig ".count($Distribucion_Docente)." fila ".$fila_."<br>");
-                $Distribucion_Docente = array_merge($Distribucion_Docente, $AuxAlumnos);
-                $fila_=count($Distribucion_Docente);
-                //printf("(: Aux ".count($AuxAlumnos)." Nuev ".count($Nuevos)." fila ".$fila_."<br>");
-              }
-              elseif($cont==$Limite)  {
-                $RecuperaAux=AumentarAlumno($AuxAlumnos,$Nuevos);
-                $AuxAlumnos=$RecuperaAux[0];
-                $Nuevos=$RecuperaAux[1];
-                //printf("(:: Aux== ".count($AuxAlumnos)." Asig ".count($Distribucion_Docente)." fila ".$fila_."<br>");
-                $Distribucion_Docente = array_merge($Distribucion_Docente, $AuxAlumnos);
-                $fila_=count($Distribucion_Docente);
-                //printf("(: Aux ".count($AuxAlumnos)." Nuev ".count($Nuevos)." fila ".$fila_."<br>");
-              }
-              else {//else
-                $RecuperaAux=DisminuirAlumnos($AuxAlumnos,$Nuevos,$Limite,$cont);
-                $AuxAlumnos=$RecuperaAux[0];
-                $Nuevos=$RecuperaAux[1];
-
-                $RecuperaAux=AumentarAlumno($AuxAlumnos,$Nuevos);
-                $AuxAlumnos=$RecuperaAux[0];
-                $Nuevos=$RecuperaAux[1];
-                //printf("(:: Aux > ".count($AuxAlumnos)." Asig ".count($Distribucion_Docente)." fila ".$fila_."<br>");
-                $Distribucion_Docente = array_merge($Distribucion_Docente, $AuxAlumnos);
-                $fila_=count($Distribucion_Docente);
-                //printf("(: Aux ".count($AuxAlumnos)." Nuev ".count($Nuevos)." fila ".$fila_."<br>");
-              }
-            }
-          }
           //$Distribucion_Docente //se muestra
           conversionYdescarga($Distribucion_Docente);
-        }
-
-
-        //header('Location: alumno.php?estado=1');
-        //exit();
       }
     }else {echo "para este propósito3, solo se permite archivo de extencion .csv";}
   }else {echo "para este propósito2, solo se permite archivo de extencion .csv";}

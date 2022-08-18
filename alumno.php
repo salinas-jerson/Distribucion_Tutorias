@@ -29,13 +29,59 @@ function conversionYdescarga($datos, $filename = "resultados.csv", $delimiter=",
       header('Content-Type: text/csv');
       header('Content-Disposition: attachment; filename="'.$filename.'",');
       fpassthru($f);
-  }
+}
 //
-function &que(&$x) {
-    $x++;
-    return $x;
+function Distribucion_X_Docente($Distribuidos,$Matriculados,$Docentes,$AlumnosAnterior,$DatoDocentes,&$PorAsig,&$Limite) {
+  //---------Numero de alumnos
+  $Limite=(int)((count($Matriculados))/(count($Docentes)-1));//-1 por las filas cabecera
+  $Distribucion_Docente=array();//construir nueva distribucion
+  $Nuevos=array();$NoTutoria=array();//arreglos para nuevos alumnos y no tutorados
+  $Nuevos=NoT_yNuevos($Matriculados,$AlumnosAnterior);//nuevos alumnos por asignar tutor
+  $NoTutoria=NoT_yNuevos($AlumnosAnterior,$Matriculados);//Alumnos que no haran tutoria
+  $PorAsig=(count($Matriculados))-$Limite*(count($Docentes)-1);//alumnos que sobran, atendiendo solo al limite
+  //
+  $fila_=0;
+  for ($i=0; $i <count($Distribuidos) ; $i++) {
+
+    if (strtolower($Distribuidos[$i][0])=="docente") {
+      $Distribucion_Docente[$fila_]=$Distribuidos[$i];$i+=1;
+      $cont=0;//verifica limite de alumnos
+      $AuxAlumnos=array();$filAux=0;
+      while (strtolower($Distribuidos[$i][0])!="docente") {
+        if (Existe($Distribuidos[$i][0],$NoTutoria)){$i+=1;}//si no hace tutoria se excluye
+        else {$AuxAlumnos[$filAux]=$Distribuidos[$i];$i+=1;$cont+=1;$filAux+=1;}
+        if ($i ==count($Distribuidos)) {break;}
+      }$i-=1;
+      //
+      if ($cont<$Limite) {//$Limite
+        AsignarNuevosAlumnos($AuxAlumnos,$Nuevos,$Limite,$cont);
+        AumentarAlumno($AuxAlumnos,$Nuevos);
+        //printf("(:: Aux< ".count($AuxAlumnos)." Asig ".count($Distribucion_Docente)." fila ".$fila_."<br>");
+        $Distribucion_Docente = array_merge($Distribucion_Docente, $AuxAlumnos);
+        $fila_=count($Distribucion_Docente);
+        //printf("(: Aux ".count($AuxAlumnos)." Nuev ".count($Nuevos)." fila ".$fila_."<br>");
+      }
+      elseif($cont==$Limite)  {
+        AumentarAlumno($AuxAlumnos,$Nuevos);
+        //printf("(:: Aux== ".count($AuxAlumnos)." Asig ".count($Distribucion_Docente)." fila ".$fila_."<br>");
+        $Distribucion_Docente = array_merge($Distribucion_Docente, $AuxAlumnos);
+        $fila_=count($Distribucion_Docente);
+        //printf("(: Aux ".count($AuxAlumnos)." Nuev ".count($Nuevos)." fila ".$fila_."<br>");
+      }
+      else {//else
+        DisminuirAlumnos($AuxAlumnos,$Nuevos,$Limite,$cont);
+        AumentarAlumno($AuxAlumnos,$Nuevos);
+        //printf("(:: Aux > ".count($AuxAlumnos)." Asig ".count($Distribucion_Docente)." fila ".$fila_."<br>");
+        $Distribucion_Docente = array_merge($Distribucion_Docente, $AuxAlumnos);
+        $fila_=count($Distribucion_Docente);
+        //printf("(: Aux ".count($AuxAlumnos)." Nuev ".count($Nuevos)." fila ".$fila_."<br>");
+      }
+    }
+  }
+  return $Distribucion_Docente;
 }
 
+// imprime los valores de datos
 function Mostrar($Datos)
 {
   echo "<table>";
@@ -48,10 +94,11 @@ function Mostrar($Datos)
   }
   echo "</table>";
 }
-//
-function AumentarAlumno($AuxAlumnos,$Nuevos)
+
+//aumenta 0 o 1 estudiante a un docente
+function AumentarAlumno(&$AuxAlumnos,&$Nuevos)
 {
-  $dado = [1,1, 0, 1, 1, 1,1,1, 1,1];
+  $dado = [1,1, 1, 1, 1, 1,1,1, 1,0,1,1,1,1,1,1];
   $indice_aleatorio = mt_rand(0, count($dado) - 1);
   $asignar = $dado[$indice_aleatorio];
   $fila=count($AuxAlumnos);
@@ -60,12 +107,13 @@ function AumentarAlumno($AuxAlumnos,$Nuevos)
       $AuxAlumnos[$fila]=$Nuevos[0];//agrega al final
       array_splice($Nuevos, 0, 1);//elimia el primero que a sido agregado
     }
-    return array($AuxAlumnos,$Nuevos);
+    return ;
   }
-  else {return array($AuxAlumnos,$Nuevos);}
+  else {return ;}
 }
+
 //Alumnos antiguos por docentesfun
-function AsignarNuevosAlumnos($AuxAlumnos,$Nuevos,$Limite,$cont)
+function AsignarNuevosAlumnos(&$AuxAlumnos,&$Nuevos,$Limite,$cont)
 {
   $fila=count($AuxAlumnos);
   $a=$cont;
@@ -76,10 +124,11 @@ function AsignarNuevosAlumnos($AuxAlumnos,$Nuevos,$Limite,$cont)
     }
     else {break;}
   }
-  return array($AuxAlumnos,$Nuevos);
+  return;
 }
-//
-function DisminuirAlumnos($AuxAlumnos,$Nuevos,$Limite,$cont)
+
+//disminuir alumnos en caso supere el limite
+function DisminuirAlumnos(&$AuxAlumnos,&$Nuevos,$Limite,$cont)
 {
   $a=$cont;
   while ($a>$Limite) {//$Limite
@@ -89,8 +138,9 @@ function DisminuirAlumnos($AuxAlumnos,$Nuevos,$Limite,$cont)
     array_splice($AuxAlumnos, $fila, 1);//elimia el ultimo porque excedentes
     $a-=1;
   }
-  return array($AuxAlumnos,$Nuevos);
+  return;
 }
+
 //verifica existencia de elemento en un arreglo
 function Existe($elemento,$array)
   {
@@ -99,6 +149,7 @@ function Existe($elemento,$array)
     }
     return false;
   }
+
 //recuperamos csv para la manipulación de datos
 function RecuperarcsvToArray($archivo)
 {
@@ -115,28 +166,6 @@ function RecuperarcsvToArray($archivo)
   return $datos;//matriz con todos los elementos del archivo
 }
 
-/*function listarAlumnos($archivo,$archivo1){
-  $fila=0;//contador para recuperar datos
-  $archcsv=fopen($archivo,"r");
-  while (($registro= fgetcsv($archcsv,1024,","))== true) {//mientras haya comas
-    $archcsv1=fopen($archivo1,"r");
-    $existe=false;
-    while (($registro1= fgetcsv($archcsv1,1024,","))== true){//mientras haya elementos
-      if ($registro[0]==$registro1[0]) { $existe=true; break;   }// existe alumno en las 2 tablas
-    }
-    if (!$existe) {//si no existe guardamos (no hace tutoría o es nuevo)
-      $num=count($registro);//numero de campos de cada linea
-      for ($i=0; $i <$num ; $i++) {
-        $datos[$fila][$i]=$registro[$i];//recupera cada atributo
-      }
-      $fila++;
-    }
-    fclose($archcsv1);
-  }
-  fclose($archcsv);
-  return $datos;//matriz con todos los elementos del archivo
-}*/
-
 //no tutorados y tutorados
 function NoT_yNuevos($archivo,$archivo1){
   $fila=0;
@@ -146,37 +175,27 @@ function NoT_yNuevos($archivo,$archivo1){
       if ($archivo[$i][0]==$archivo1[$j][0]) { $existe=true; break;   }// existe alumno en las 2 tablas
     }
     if (!$existe) {//si no existe guardamos (no hace tutoría o es nuevo)
-      $num=count($archivo[$i]);//numero de campos de cada linea
-      for ($k=0; $k <$num ; $k++) {
-        $datos[$fila][$k]=$archivo[$i][$k];//recupera cada atributo
-      }$fila+=1;
+      $datos[$fila]=$archivo[$i];
+      $fila+=1;
     }
   }
   return $datos;//matriz con todos los elementos del archivo
 }
 #alumnos matriculados el anterior semestre, a partir de la distribución de alumnosxDocente
-function MatriculadosAnterrior($archivo){
+function MatriculadosAnterior($archivo){
   $fila=0;//contador para recuperar datos
   $fila1=0;//contador para recuperar docentes
-  $archcsv=fopen($archivo,"r");
-  while (($registro= fgetcsv($archcsv,1024,","))== true) {//mientras haya comas
-    $str=strtolower($registro[0]);
+  for ($k=0; $k < count($archivo); $k++) {//mientras haya comas
+    $str=strtolower($archivo[$k][0]);
     if ($str!="docente") {//si no existe guardamos (no hace tutoría o es nuevo)
-      $num=count($registro);//numero de campos de cada linea
-      for ($i=0; $i <$num ; $i++) {
-        $datos[$fila][$i]=$registro[$i];//recupera cada atributo
-      }
+      $datos[$fila]=$archivo[$k];
       $fila++;
     }
     else{
-      $num=count($registro);//numero de campos de cada linea
-      for ($i=0; $i <$num ; $i++) {
-        $datosD[$fila1][$i]=$registro[$i];//recupera cada atributo
-      }
+      $datosD[$fila1]=$archivo[$k];
       $fila1++;
     }
   }
-  fclose($archcsv);
   //en datos esta solos alumnos y en datosD solo docentes
   return array($datos,$datosD);//matriz con todos los elementos del archivo
 }
