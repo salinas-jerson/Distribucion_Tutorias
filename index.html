@@ -16,23 +16,23 @@
         <br>
         <div id="id2">
           <legend>Seleccione los archivos CSV:</legend>
-          <form action="gestorArchivo.php" method="POST" enctype="multipart/form-data">
+          <form action="gestorArchivo.php" method="POST" enctype="multipart/form-data" target="ventana">
               <div id="ar">
 
                 <br>
-                <! archivo csv 2021-2">
+ 
                 Archivo Alumnos DistribuidosxD el semestre pasado<br>
                 <input type="file" name="distribuidos">
                 <br>
 
                 <br>
-                <! archivo csv 2022-1 <input type="submit">
+ 
                 Archivo de matriculados en el presente semestre<br>
                 <input type="file" name="matriculados">
                 <br>
 
                 <br>
-                <! archivo csv docente>
+ 
                 Archivo de docentes para el presente semestre <br>
                 <input type="file" name="docentes">
                 <br>
@@ -55,12 +55,15 @@
             </div>
 
             <p>
-              <input type="submit" name="Bbuscar" value="Mostrar">
-              <!input type="submit" name="Bdescarga" value="Descargar">
-              <! .. comentario  onclick="lexico()" >
+                <input type="submit" name="Bbuscar" value="Mostrar">
+                <input type="submit" name="Bdescarga" value="Descargar">
+                <br>
+                 
             </p>
 
             </form>
+
+            <iframe src="ventana" src="gestorArchivo.php"></iframe>  
         </div>
 
 

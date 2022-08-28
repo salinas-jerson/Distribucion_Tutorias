@@ -1,6 +1,7 @@
 <?php
 include("alumno.php");
-
+$BotonB="";
+$BotonDescargar="";
 $dir ="files/";
 $permitico=array('csv');
 
@@ -8,8 +9,14 @@ $distribuidos=$_FILES["distribuidos"]["name"];
 $matriculados=$_FILES["matriculados"]["name"];
 $docentes=$_FILES["docentes"]["name"];
 $Option=$_POST['eleccioN'];
-$BotonB=$_POST['Bbuscar'];
-//$BotonDescargar=$_POST['Bdescarga'];
+if (isset($_POST['Bbuscar'])){
+  $BotonB=$_POST['Bbuscar'];
+}
+if (isset($_POST['Bdescarga'])){
+  $BotonDescargar=$_POST['Bdescarga'];
+}
+// 
+
 
 $ruta1=$dir.$distribuidos;
 $ruta2=$dir.$matriculados;
@@ -79,13 +86,73 @@ if (in_array($ex1,$permitico)) {
 
           Mostrar($Datos);//alumnos tutorados
         }
+
+
       }
       //otro boton
-      elseif (0==1) {
+      // segundo boton 
+      elseif ($BotonDescargar) {
+        $AlumnosAnterior=array();$DatoDocentes=array();$GetAlumnos_Docentes=array();
+        $GetAlumnos_Docentes=MatriculadosAnterior($Distribuidos);
+        $AlumnosAnterior=$GetAlumnos_Docentes[0];//solo alumnos del anterior semestre
+        $DatoDocentes=$GetAlumnos_Docentes[1];//solo docentes del anterior semestre
 
-          //$Distribucion_Docente //se muestra
-          conversionYdescarga($Distribucion_Docente);
+        if ($Option=="distribucion") {
+          $Limite=0;
+          $PorAsig=0;
+          $Distribucion_Docente=array();
+          $Distribucion_Docente=Distribucion_X_Docente($Distribuidos,$Matriculados,$Docentes,$AlumnosAnterior,$DatoDocentes,$PorAsig,$Limite);
+          //Mostrar($Distribucion_Docente);
+          
+              
+          $filename = 'NuevaDistribucion.csv';       
+          header("Content-type: text/csv");       
+          header("Content-Disposition: attachment; filename=$filename");       
+          $output = fopen("php://output", "w");       
+  
+          foreach($Distribucion_Docente as $row)       
+          {  
+            fputcsv($output, array($row[0],$row[1]));  
+          }       
+          fclose($output);    
+          
+        }
+        elseif ($Option=="noTutorados") {
+          $DatosNo=array();
+          $DatosNo=NoT_yNuevos($AlumnosAnterior,$Matriculados);// en datos está todo un distribuidos
+          
+          $filename = 'NoTutorados.csv';       
+          header("Content-type: text/csv");       
+          header("Content-Disposition: attachment; filename=$filename");       
+          $output = fopen("php://output", "w");       
+    
+          foreach($DatosNo as $row)       
+          {  
+            fputcsv($output, array($row[0],$row[1]));  
+            //fputcsv($output, $row);  
+          }       
+          fclose($output);  
+        }
+        else {
+          $Datos=array();
+          $Datos=NoT_yNuevos($Matriculados,$AlumnosAnterior);// en datos está todo un distribuidos
+          
+  
+          $filename = 'Tutorados.csv';       
+          header("Content-type: text/csv");       
+          header("Content-Disposition: attachment; filename=$filename");       
+          $output = fopen("php://output", "w");       
+
+          foreach($Datos as $row)       
+          {  
+            fputcsv($output, array($row[0],$row[1]));  
+            //fputcsv($output, $row);  
+          }       
+          fclose($output);  
+        }
       }
+
+      
     }else {echo "para este propósito3, solo se permite archivo de extencion .csv";}
   }else {echo "para este propósito2, solo se permite archivo de extencion .csv";}
 }else {echo "para este propósito1, solo se permite archivo de extencion .csv";}

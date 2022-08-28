@@ -168,6 +168,7 @@ function RecuperarcsvToArray($archivo)
 
 //no tutorados y tutorados
 function NoT_yNuevos($archivo,$archivo1){
+  $datos = array();
   $fila=0;
   for ($i=0; $i < count($archivo); $i++) {
     $existe=false;
@@ -183,6 +184,7 @@ function NoT_yNuevos($archivo,$archivo1){
 }
 #alumnos matriculados el anterior semestre, a partir de la distribución de alumnosxDocente
 function MatriculadosAnterior($archivo){
+  
   $fila=0;//contador para recuperar datos
   $fila1=0;//contador para recuperar docentes
   for ($k=0; $k < count($archivo); $k++) {//mientras haya comas
