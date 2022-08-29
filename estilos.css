@@ -1,7 +1,7 @@
 *{
     margin:0px;
     padding: 0p;
-    
+
 }
 
 body{
@@ -9,7 +9,7 @@ body{
 	font-family: 'helvatica' ,sans-serif;
 	background-image: linear-gradient(135deg,#00B7D4,#505488,#2F3F80,#161569,#5A4894,A950A1,#FF7CAE);
 	background-size: 500%;
-	
+
 }
 
 html, body{
@@ -33,46 +33,46 @@ html, body{
 #container{
     width: 1000px;
     margin: 0px auto;
- 
+
 }
 
 header{
-    background: rgb(168, 221, 215);
+    background: rgb(35, 89, 84);
     height: 50px;
     width: 100%;
     margin: 0px;
     text-align:center;
     font-size:25pt;
     line-height:13pt;
-    
+
     font-family:Verdana, Geneva, Tahoma, sans-serif;
 }
-#id1{
-    background: rgb(168, 221, 215);
-    height: 150px;
+#subirarchivos{
+    background: rgb(35, 89, 84);
+    height: 300px;
     width: 100%;
     margin: 0px;
     text-align:center;
     font-size: 20pt;
     line-height: 20pt;
 }
-#id2{
-    background: rgb(168, 221, 215);
+#opcionesB{
+    background: rgb(35, 89, 84);
     height: 650px;
     width: 100%;
     margin: 0px;
     text-align:center;
     border-width: 1px;
 }
- 
-#id3{
-    background: rgb(168, 221, 215);
-    height: 50px;
+
+#opciones{
+    background: rgb(35, 89, 84);
+    height: 80px;
     width: 100%;
     margin: 0px;
-    text-indent : 19.6%;
-    font-size: 12pt;
-    
+    text-indent : 1%;
+    font-size: 14pt;
+
 }
 
 .chb {
@@ -82,7 +82,7 @@ header{
 	height: 15px;
 	background: #555;
 	border-radius: 15px;
-	box-shadow: inset 0px 1px 1px rgba(0,0,0,0.6), 0px 1px 0px rgba(255,255,255,0.3);   
+	box-shadow: inset 0px 1px 1px rgba(0,0,0,0.6), 0px 1px 0px rgba(255,255,255,0.3);
 
 }
 

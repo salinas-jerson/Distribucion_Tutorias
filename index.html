@@ -14,61 +14,51 @@
         </header>
 
         <br>
-        <div id="id2">
+        <form action="gestorArchivo.php" method="POST" enctype="multipart/form-data" target="ventana">
+        <div id="subirarchivos">
+          <b>
           <legend>Seleccione los archivos CSV:</legend>
-          <form action="gestorArchivo.php" method="POST" enctype="multipart/form-data" target="ventana">
-              <div id="ar">
-
-                <br>
- 
-                Archivo Alumnos DistribuidosxD el semestre pasado<br>
-                <input type="file" name="distribuidos">
-                <br>
-
-                <br>
- 
-                Archivo de matriculados en el presente semestre<br>
-                <input type="file" name="matriculados">
-                <br>
-
-                <br>
- 
-                Archivo de docentes para el presente semestre <br>
-                <input type="file" name="docentes">
-                <br>
-
-              </div>
-              <br>
-
-            <legend>Seleccione una acción: </legend>
+          <div id="ar">
             <br>
+            Archivo Alumnos DistribuidosxD el semestre pasado<br>
+            <input type="file" class="import" name="distribuidos"><br>
+            Archivo de matriculados en el presente semestre<br>
+            <input type="file" class="import" name="matriculados"><br>
+            Archivo de docentes para el presente semestre <br>
+            <input type="file" class="import" name="docentes"><br>
+            <br>
+          </div>
+        </b>
 
-            <div id="lis">
-                <input type="radio" name="eleccioN" value="noTutorados" checked>
-                <label for="noTutorados">Alumnos no tutorados en semestre 2022-I</label>
-                <br>
-                <input type="radio" name="eleccioN" value="tutorados" >
-                <label for="tutorados"> Mostrar los nuevos alumnos para  tutoria </label>
-                <br>
-                <input type="radio" name="eleccioN" value="distribucion" >
-                <label for="tutorados">  Generar distribución Alumno x Docentes </label>
-            </div>
-
-            <p>
-                <input type="submit" name="Bbuscar" value="Mostrar">
-                <input type="submit" name="Bdescarga" value="Descargar">
-                <br>
-                 
-            </p>
-
-            </form>
-
-            <iframe src="ventana" src="gestorArchivo.php"></iframe>  
         </div>
-
-
-
         <br>
+        <div id="opcionesB">
+          <br><B>
+                <legend>SELECCIONE UNA OPCIÓN:</legend>
+          </B></br>
+
+          <div id="opciones">
+            <b>
+              <input type="radio" name="eleccioN" value="noTutorados" checked>
+              <label for="noTutorados">Alumnos no tutorados en semestre 2022-I</label>
+              <br>
+              <input type="radio" name="eleccioN" value="tutorados" >
+              <label for="tutorados"> Mostrar los nuevos alumnos para  tutoria </label>
+              <br>
+              <input type="radio" name="eleccioN" value="distribucion" >
+              <label for="tutorados">  Generar distribución Alumno x Docentes </label>
+            </b>
+          </div>
+
+          <p>
+              <input type="submit" class="btn btn1" name="Bbuscar" value="Mostrar">
+              <input type="submit" class="btn btn1"name="Bdescarga" value="Descargar">
+              <br>
+          </p>
+        </div>
+        </form>
+
+        <iframe src="ventana" src="gestorArchivo.php"></iframe>
     </div>
 </body>
 </html>

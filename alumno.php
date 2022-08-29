@@ -1,24 +1,4 @@
 <?php
-
-
-function Balancear0($array,$nuevos){
-  	for($i=0;$i<count($array);$i++){
-  	  // Comparar codigos
-  	  for($j=$i+1;$j<count($array);$j++){
-  	    // Si Son del mismo codigo
-  	    if(substr($array[$i][0],0,2)==substr($array[$j][0],0,2)){
-  	      // Buscar un codigo distinto en la lista de nuevos
-          for($k=0;$k<count($nuevos);$k++){
-  	        if(substr($nuevos[$k][0],0,2)!=substr($array[$j][0],0,2)){
-  	          $aux = $nuevos[$k];
-  	          $nuevos[$k] = $array[$j];
-  	          $array[$j] = $aux;
-  	        }
-  	      }
-  	    }
-  	  }
-  	}
-	}
 //
 function conversionYdescarga($datos, $filename = "resultados.csv", $delimiter=",") {
       $f = fopen('php://memory', 'w');
@@ -36,8 +16,8 @@ function Distribucion_X_Docente($Distribuidos,$Matriculados,$Docentes,$AlumnosAn
   $Limite=(int)((count($Matriculados))/(count($Docentes)-1));//-1 por las filas cabecera
   $Distribucion_Docente=array();//construir nueva distribucion
   $Nuevos=array();$NoTutoria=array();//arreglos para nuevos alumnos y no tutorados
-  $Nuevos=NoT_yNuevos($Matriculados,$AlumnosAnterior);//nuevos alumnos por asignar tutor
-  $NoTutoria=NoT_yNuevos($AlumnosAnterior,$Matriculados);//Alumnos que no haran tutoria
+  $Nuevos=NoTutorados_O_NuevosTut($Matriculados,$AlumnosAnterior);//nuevos alumnos por asignar tutor
+  $NoTutoria=NoTutorados_O_NuevosTut($AlumnosAnterior,$Matriculados);//Alumnos que no haran tutoria
   $PorAsig=(count($Matriculados))-$Limite*(count($Docentes)-1);//alumnos que sobran, atendiendo solo al limite
   //
   $fila_=0;
@@ -112,7 +92,7 @@ function AumentarAlumno(&$AuxAlumnos,&$Nuevos)
   else {return ;}
 }
 
-//Alumnos antiguos por docentesfun
+//Alumnos antiguos por docentes
 function AsignarNuevosAlumnos(&$AuxAlumnos,&$Nuevos,$Limite,$cont)
 {
   $fila=count($AuxAlumnos);
@@ -166,8 +146,8 @@ function RecuperarcsvToArray($archivo)
   return $datos;//matriz con todos los elementos del archivo
 }
 
-//no tutorados y tutorados
-function NoT_yNuevos($archivo,$archivo1){
+//no tutorados o tutorados
+function NoTutorados_O_NuevosTut($archivo,$archivo1){
   $datos = array();
   $fila=0;
   for ($i=0; $i < count($archivo); $i++) {
@@ -180,25 +160,25 @@ function NoT_yNuevos($archivo,$archivo1){
       $fila+=1;
     }
   }
-  return $datos;//matriz con todos los elementos del archivo
+  return $datos;//matriz con notutorados o nuevos
 }
 #alumnos matriculados el anterior semestre, a partir de la distribución de alumnosxDocente
 function MatriculadosAnterior($archivo){
-  
+
   $fila=0;//contador para recuperar datos
   $fila1=0;//contador para recuperar docentes
   for ($k=0; $k < count($archivo); $k++) {//mientras haya comas
     $str=strtolower($archivo[$k][0]);
-    if ($str!="docente") {//si no existe guardamos (no hace tutoría o es nuevo)
+    if ($str!="docente") {//es alumno
       $datos[$fila]=$archivo[$k];
       $fila++;
     }
-    else{
+    else{//es docente
       $datosD[$fila1]=$archivo[$k];
       $fila1++;
     }
   }
   //en datos esta solos alumnos y en datosD solo docentes
-  return array($datos,$datosD);//matriz con todos los elementos del archivo
+  return array($datos,$datosD);//matriz con todos los alumnos, docentes
 }
 ?>
