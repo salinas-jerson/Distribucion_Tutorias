@@ -49,7 +49,7 @@ header{
 }
 #subirarchivos{
     background: rgb(35, 89, 84);
-    height: 300px;
+    height: 250px;
     width: 100%;
     margin: 0px;
     text-align:center;
@@ -58,7 +58,7 @@ header{
 }
 #opcionesB{
     background: rgb(35, 89, 84);
-    height: 650px;
+    height: 300px;
     width: 100%;
     margin: 0px;
     text-align:center;
