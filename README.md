@@ -1,8 +1,8 @@
 # Examen Parcial en Desarrollo de Software
 
-El presente proyecto tiene la funcionalidad de 
+El presente proyecto tiene las siguientes funcionalidades: 
 - Generar alumnos no tutorados
-- Generar alumnos tutorados
+- Generar alumnos tutorados nuevos
 - Hacer la distribución de alumnos
 
 
