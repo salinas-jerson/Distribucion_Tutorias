@@ -37,7 +37,7 @@ html, body{
 }
 
 header{
-    border: 2px solid rgb(144,12,63);
+
     border-radius: 10px;
     background: rgb(35, 89, 84);
     height: 50px;
@@ -50,7 +50,7 @@ header{
     font-family:Verdana, Geneva, Tahoma, sans-serif;
 }
 #subirarchivos{
-    border: 2px solid rgb(144,12,63);
+
     border-radius: 10px;
 
     background: rgb(35, 89, 84);
@@ -62,7 +62,7 @@ header{
     line-height: 20pt;
 }
 #opcionesB{
-    border: 2px solid rgb(144,12,63);
+    
     border-radius: 10px;
 
     background: rgb(35, 89, 84);
