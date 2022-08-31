@@ -4,3 +4,10 @@ El presente proyecto tiene la funcionalidad de
 - Generar alumnos no tutorados
 - Generar alumnos tutorados
 - Hacer la distribución de alumnos
+
+
+
+En la interfaz:
+Paso 1: se debe subir los archivos correspondientes
+Paso 2: Selecciona la opción deseada de mostrar o descargar
+paso 3: El resultados puede ser mostrado o descargado
