@@ -62,9 +62,9 @@ if (in_array($ex1,$permitico)) {      //verifica si son permitidos los archivos
           $NoTutorados=NoTutorados_O_NuevosTut($AlumnosAnterior,$Matriculados);
           $Distribucion_Docente=Distribucion_X_Docente($Distribuidos,$NuevosT,$NoTutorados,$PorAsig,$Limite);
           //
-          printf(" Distribución de alumnos por docente <br>");
-          printf($PorAsig." Docentes tendran mas 1 alumno <br>");
-          printf("N° Matriculados ".(count($Matriculados)).", N° DocenteS ".(count($Docentes)-1).",  Asignacion a ".$Limite." alumnos"."<br><br>");
+          printf(" <h1> Distribución de alumnos por docente </h1> ");
+          printf("<h3>".$PorAsig." Docentes tendran mas 1 alumno </h3> ");
+          printf("<h3>N° Matriculados ".(count($Matriculados)).", N° DocenteS ".(count($Docentes)-1).",  Asignacion a ".$Limite." alumnos </h3>");
           // .... cabeceras de la tabla
           echo "<table>"."<tr>"."<td>"."Código"."</td>"."<td>"."Nombres"."</td>"."</tr><br>"."</table>";
           Mostrar($Distribucion_Docente);
@@ -73,7 +73,7 @@ if (in_array($ex1,$permitico)) {      //verifica si son permitidos los archivos
           $Datos=array();
           $Datos=NoTutorados_O_NuevosTut($AlumnosAnterior,$Matriculados);// arreglo de no tutorados
           //
-          echo "Alumnos no tutorados :-) <br><br>";                     // .... cabeceras de la tabla
+          echo "<h1>Alumnos no tutorados </h1> ";                       // .... cabeceras de la tabla
           echo "<table>"."<tr>"."<td>"."Código"."</td>"."<td>"."Nombres"."</td>"."</tr><br>"."</table>";
           Mostrar($Datos);//mostar alumnos no turorados
         }
@@ -81,7 +81,7 @@ if (in_array($ex1,$permitico)) {      //verifica si son permitidos los archivos
           $Datos=array();
           $Datos=NoTutorados_O_NuevosTut($Matriculados,$AlumnosAnterior);// arreglo de tutorados
           //
-          echo "Alumnos tutorados :)<br> <br>";                         // .... cabeceras de la tabla
+          echo "<h1>Alumnos tutorados </h1> ";                          // .... cabeceras de la tabla
           echo "<table>"."<tr>"."<td>"."Código"."</td>"."<td>"."Nombres"."</td>"."</tr><br>"."</table>";
           Mostrar($Datos);//alumnos tutorados
         }
