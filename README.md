@@ -8,8 +8,13 @@ El presente proyecto tiene las siguientes funcionalidades:
 
 
 En la interfaz:
-- Paso 1: se debe subir los archivos correspondientes
-- Paso 2: Selecciona la opción deseada de mostrar o descargar
-- paso 3: El resultados puede ser mostrado o descargado
+- Paso 1: Se debe cargar los archivos correspondientes en formato .csv (se pueden encontrar en la carpeta files algunos ejemplos)
+    - Los archivos a ingresar deben tener la siguiente estructura
+        - El primer archivo a ingresar debe contener la distribucion de alumnos de un semestre n 
+        - El segundo archivo a ingresar debe contener la lista de alumnos del semestre siguiente a n
+        - El tercer archivo debe contener la lista de docentes
+- Paso 2: Escoja la operacion que desea 
+- Paso 3: Seleccione mostrar o descargar 
+- paso 4: El resultado puede ser mostrado o descargado
 
 ![Image text](https://github.com/salinas-jerson/Examen1PParcial/blob/main/Resources/interfaz.jpg)
